@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fire Prediction</title>
+</head>
+<body>
+    <h1>Enter Input Variables to Predict Fire</h1>
+    <form id="predict-form">
+        <label for="temperature">Temperature:</label>
+        <input type="text" id="temperature" required><br>
+
+        <label for="dew">Dew:</label>
+        <input type="text" id="dew" required><br>
+
+        <label for="humidity">Humidity:</label>
+        <input type="text" id="humidity" required><br>
+
+        <label for="precip">Precipitation:</label>
+        <input type="text" id="precip" required><br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        // Function to load the JSON model parameters
+        async function loadModelParameters() {
+            const response = await fetch('model_parameters.json'); // Path to your model file
+            const modelParams = await response.json();
+            console.log('Loaded Model Parameters:', modelParams);
+            return modelParams;
+        }
+
+        // Function to make a simple prediction (based on dummy logic for now)
+        function makePrediction(inputData, modelParams) {
+            // Replace this logic with the actual decision tree traversal logic
+            // Here we're using a simple example: temperature > 30 and humidity < 50 -> fire.
+            const [temperature, dew, humidity, precip] = inputData;
+            const prediction = (temperature > 30 && humidity < 50) ? 'Fire' : 'No Fire';
+            return prediction;
+        }
+
+        // Handle form submission
+        document.getElementById('predict-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // Get input values from the form
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const dew = parseFloat(document.getElementById('dew').value);
+            const humidity = parseFloat(document.getElementById('humidity').value);
+            const precip = parseFloat(document.getElementById('precip').value);
+
+            // Fetch model parameters from JSON file
+            const modelParams = await loadModelParameters();
+
+            // Prepare input data for the model
+            const inputData = [temperature, dew, humidity, precip];
+
+            // Make a prediction using the model
+            const prediction = makePrediction(inputData, modelParams);
+
+            // Display the prediction result
+            document.getElementById('result').innerText = `Prediction: ${prediction}`;
+        });
+    </script>
+</body>
+</html>
